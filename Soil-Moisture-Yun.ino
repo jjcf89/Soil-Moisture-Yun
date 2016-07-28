@@ -52,7 +52,7 @@ const int NUM_FIELDS = 8;
 // What are the names of your fields?
 String fieldName[NUM_FIELDS] = {"humidity", "tempF", "moisture1", "moisture2", "moisture3", "moisture4", "moisture5", "moisture6"};
 // We'll use this array later to store our field data
-String fieldData[NUM_FIELDS] = {""};
+String fieldData[NUM_FIELDS] = {"0"};
 
 ////////////////
 // Pin Inputs //
