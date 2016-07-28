@@ -120,7 +120,7 @@ void loop()
 
   for (int i = 0; i < NUM_SENSORS; i++) {
     // Enable power to sensor
-    digitalWrite(i, HIGH);
+    digitalWrite(digital_pins[i], HIGH);
     // Give time to settle
     delay(100);
     
@@ -128,7 +128,7 @@ void loop()
     fieldData[SENSOR_OFFSET + i] = String(val);
     
     // Disable power to sensor
-    digitalWrite(i, LOW);
+    digitalWrite(digital_pins[i], LOW);
   }
 
   // Check if any reads failed and exit early (to try again).
