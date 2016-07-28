@@ -174,6 +174,7 @@ void postData()
   // Send the curl command:
   Console.print("Sending command: ");
   Console.println(curlCmd); // Print command for debug
+  Console.flush();
   phant.runShellCommand(curlCmd); // Send command through Shell
 
   // Read out the response:
