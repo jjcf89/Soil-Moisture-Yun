@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- EXTERNAL LIBS-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://www.gstatic.com/charts/loader.js"></script>
+
+    <!-- EXAMPLE SCRIPT -->
+    <script>
+
+      // onload callback
+      function drawChart() {
+
+        var public_key = '8djKbwW1wyIjZvGAa3WG';
+
+        // JSONP request
+        var jsonData = $.ajax({
+          url: 'https://data.sparkfun.com/output/' + public_key + '.json',
+          data: {page: 1},
+          dataType: 'jsonp',
+        }).done(function (results) {
+
+          var data = new google.visualization.DataTable();
+
+          data.addColumn('datetime', 'Time');
+          data.addColumn('number', 'Temp');
+          data.addColumn('number', 'Humidity');
+
+          $.each(results, function (i, row) {
+            data.addRow([
+              (new Date(row.timestamp)),
+              parseFloat(row.temp),
+              parseFloat(row.humidity)
+            ]);
+          });
+		  
+			var materialOptions = {
+				chart: {
+				  title: 'Appt'
+				},
+				explorer: {},
+				series: {
+				  // Gives each series an axis name that matches the Y-axis below.
+				  0: {axis: 'Temp'},
+				  1: {axis: 'Humidity'}
+				},
+				axes: {
+				  // Adds labels to each axis; they don't have to match the axis names.
+				  y: {
+					Temp: {label: 'Temp (Celsius)'},
+					Humidity: {label: 'Humidity'}
+				  }
+				}
+			  };
+
+		  var chartDiv = $('#chart').get(0);
+          var chart = new google.charts.Line(chartDiv);
+
+          chart.draw(data, materialOptions);
+        });
+
+      }
+
+      // load chart lib
+      google.charts.load('current', {'packages':['line', 'corechart']});
+
+      // call drawChart once google charts is loaded
+      google.charts.setOnLoadCallback(drawChart);
+
+    </script>
+
+  </head>
+  <body>
+    <div id="chart" style="width: 100%;"></div>
+  </body>
+</html>
