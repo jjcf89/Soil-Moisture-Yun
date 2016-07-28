@@ -49,9 +49,9 @@ String publicKey = "xRpV3GA0jVHMnoOnor2K";
 // Private key, which only someone posting to the stream knows
 String privateKey = "Zar2ERmej2TAMX2MXVG0";
 // How many data fields are in your stream?
-const int NUM_FIELDS = 8;
+const int NUM_FIELDS = 6;
 // What are the names of your fields?
-String fieldName[NUM_FIELDS] = {"humidity", "tempf", "moisture1", "moisture2", "moisture3", "moisture4", "moisture5", "moisture6"};
+String fieldName[NUM_FIELDS] = {"humidity", "tempf", "moisture1", "moisture2", "moisture3", "moisture4"};
 // We'll use this array later to store our field data
 String fieldData[NUM_FIELDS] = {"0"};
 
@@ -62,7 +62,7 @@ Phant phant("data.sparkfun.com", publicKey, privateKey);
 ////////////////
 const uint8_t analog_pins[] = {A0,A1,A2,A3,A4,A5};
 const uint8_t digital_pins[] = {3,4,5,6,7,8};
-const int NUM_SENSORS = 1;
+const int NUM_SENSORS = 2;
 const int SENSOR_OFFSET = 2; // Equals index of moisture1
 
 ////////
@@ -157,6 +157,7 @@ void postData()
   // Should look like: --data "fieldName=fieldData"
   for (int i=0; i<NUM_FIELDS; i++)
   {
+    Console.println(fieldName[i] + " => " + fieldData[i]);
     phant.add(fieldName[i], fieldData[i]);
   }
 
