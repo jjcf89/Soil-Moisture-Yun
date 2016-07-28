@@ -14,15 +14,14 @@ keys before uploading! These are in the global variable section.
 
 Hardware Hookup:
   * These components are connected to the Arduino's I/O pins:
-    * D3 - Active-low momentary button (pulled high internally)
-    * A0 - Photoresistor (which is combined with a 10k resistor
-           to form a voltage divider output to the Arduino).
-    * D5 - SPST switch to select either 5V or 0V to this pin.
+    * D2 - DHT Data pin
+    * D3-8 - Soil moisture power enable
+    * A0-5 - Soil moisture readings
   * Your Yun should also, somehow, be connected to the Internet.
     You can use Ethernet, or the on-board WiFi module.
 
 Development environment specifics:
-    IDE: Arduino 1.5.6-r2
+    IDE: Arduino 1.6.10
     Hardware Platform: Arduino Yun
 
 This code is beerware; if you see me (or any other SparkFun 
