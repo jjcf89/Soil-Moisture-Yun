@@ -41,6 +41,7 @@ Distributed as-is; no warranty is given.
 /////////////////
 // Phant Stuff //
 /////////////////
+#include <Phant.h>
 // URL to phant server (only change if you're not using data.sparkfun
 String phantURL = "http://data.sparkfun.com/input/";
 // Public key (the one you see in the URL):
@@ -53,6 +54,8 @@ const int NUM_FIELDS = 8;
 String fieldName[NUM_FIELDS] = {"humidity", "tempf", "moisture1", "moisture2", "moisture3", "moisture4", "moisture5", "moisture6"};
 // We'll use this array later to store our field data
 String fieldData[NUM_FIELDS] = {"0"};
+
+Phant phant("data.sparkfun.com", publicKey, privateKey);
 
 ////////////////
 // Pin Inputs //
@@ -101,11 +104,9 @@ void setup()
   
   dht.begin();
   
-  for (int i = 0; i < 10; i++) {
-    Console.println("=========== Ready to Stream ===========");
-    Console.flush();
-    delay(500);
-  }
+  while(!Console);
+  Console.println("=========== Ready to Stream ===========");
+
 }
 
 void loop()
@@ -150,39 +151,28 @@ void loop()
 
 void postData()
 {
-  Process phant; // Used to send command to Shell, and view response
-  String curlCmd; // Where we'll put our curl command
-  String curlData[NUM_FIELDS]; // temp variables to store curl data
-
+  Process proc;
+  String cmd;
   // Construct curl data fields
   // Should look like: --data "fieldName=fieldData"
   for (int i=0; i<NUM_FIELDS; i++)
   {
-    curlData[i] = "--data \"" + fieldName[i] + "=" + fieldData[i] + "\" ";
+    phant.add(fieldName[i], fieldData[i]);
   }
 
-  // Construct the curl command:
-  curlCmd = "curl ";
-  curlCmd += "--header "; // Put our private key in the header.
-  curlCmd += "\"Phant-Private-Key: "; // Tells our server the key is coming
-  curlCmd += privateKey; 
-  curlCmd += "\" "; // Enclose the entire header with quotes.
-  for (int i=0; i<NUM_FIELDS; i++)
-    curlCmd += curlData[i]; // Add our data fields to the command
-  curlCmd += phantURL + publicKey; // Add the server URL, including public key
-
   // Send the curl command:
+  cmd = "curl \"" + phant.url() + "\"";
   Console.print("Sending command: ");
-  Console.println(curlCmd); // Print command for debug
+  Console.println(cmd); // Print command for debug
   Console.flush();
-  phant.runShellCommand(curlCmd); // Send command through Shell
+  proc.runShellCommand(cmd); // Send command through Shell
 
   // Read out the response:
   Console.print("Response: ");
   // Use the phant process to read in any response from Linux:
-  while (phant.available())
+  while (proc.available())
   {
-    char c = phant.read();
+    char c = proc.read();
     Console.write(c);
   }
   Console.println("");
