@@ -104,7 +104,7 @@ void setup()
   
   dht.begin();
   
-  while(!Console);
+  //while(!Console);
   Console.println("=========== Ready to Stream ===========");
 
 }
