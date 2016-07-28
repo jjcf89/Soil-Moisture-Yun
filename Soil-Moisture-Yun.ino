@@ -184,5 +184,6 @@ void postData()
     char c = phant.read();
     Console.write(c);
   }
+  Console.println("");
 }
 
