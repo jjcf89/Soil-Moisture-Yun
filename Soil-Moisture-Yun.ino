@@ -36,6 +36,7 @@ Distributed as-is; no warranty is given.
 // Process.h gives us access to the Process class, which can be
 // used to construct Shell commands and read the response.
 #include <Process.h>
+#include <Console.h>
 
 /////////////////
 // Phant Stuff //
@@ -89,7 +90,8 @@ DHT dht(DHTPIN, DHTTYPE);
 void setup() 
 {
   Bridge.begin();
-  Serial.begin(115200);
+  Console.begin();
+  Console.buffer(64);
 
   // Setup Output Pins:
   for (int i = 0; i < NUM_SENSORS; i++) {
@@ -98,8 +100,12 @@ void setup()
   }
   
   dht.begin();
-
-  Serial.println("=========== Ready to Stream ===========");
+  
+  for (int i = 0; i < 10; i++) {
+    Console.println("=========== Ready to Stream ===========");
+    Console.flush();
+    delay(500);
+  }
 }
 
 void loop()
@@ -127,10 +133,16 @@ void loop()
 
   // Check if any reads failed and exit early (to try again).
   if (isnan(h) || isnan(t)) {
-    Serial.println("Failed to read from DHT sensor!");
+    Console.println("Failed to read from DHT sensor!");  
+    Console.flush();
+    delay(500);
+    return;
   } else {
     postData();
   }
+
+  Console.println("Sleeping");
+  Console.flush();
     
   // Wait a few seconds between measurements.
   delay(30000);
@@ -160,17 +172,17 @@ void postData()
   curlCmd += phantURL + publicKey; // Add the server URL, including public key
 
   // Send the curl command:
-  Serial.print("Sending command: ");
-  Serial.println(curlCmd); // Print command for debug
+  Console.print("Sending command: ");
+  Console.println(curlCmd); // Print command for debug
   phant.runShellCommand(curlCmd); // Send command through Shell
 
   // Read out the response:
-  Serial.print("Response: ");
+  Console.print("Response: ");
   // Use the phant process to read in any response from Linux:
   while (phant.available())
   {
     char c = phant.read();
-    Serial.write(c);
+    Console.write(c);
   }
 }
 
