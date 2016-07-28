@@ -43,25 +43,23 @@ Distributed as-is; no warranty is given.
 // URL to phant server (only change if you're not using data.sparkfun
 String phantURL = "http://data.sparkfun.com/input/";
 // Public key (the one you see in the URL):
-String publicKey = "8djKbwW1wyIjZvGAa3WG";
+String publicKey = "xRpV3GA0jVHMnoOnor2K";
 // Private key, which only someone posting to the stream knows
-String privateKey = "pzdZa8w689FG4WAoJm8A";
+String privateKey = "Zar2ERmej2TAMX2MXVG0";
 // How many data fields are in your stream?
-const int NUM_FIELDS = 2;
+const int NUM_FIELDS = 8;
 // What are the names of your fields?
-String fieldName[NUM_FIELDS] = {"humidity", "temp"};
+String fieldName[NUM_FIELDS] = {"humidity", "tempF", "moisture1", "moisture2", "moisture3", "moisture4", "moisture5", "moisture6"};
 // We'll use this array later to store our field data
-String fieldData[NUM_FIELDS];
+String fieldData[NUM_FIELDS] = {""};
 
 ////////////////
 // Pin Inputs //
 ////////////////
-const int triggerPin = 3;
-const int lightPin = A0;
-const int switchPin = 5;
-
-String name = "Yun-anon";
-boolean newName = true;
+const uint8_t analog_pins[] = {A0,A1,A2,A3,A4,A5};
+const uint8_t digital_pins[] = {3,4,5,6,7,8};
+const int NUM_SENSORS = 1;
+const int SENSOR_OFFSET = 2; // Equals index of moisture1
 
 ////////
 // DHT11
@@ -93,10 +91,11 @@ void setup()
   Bridge.begin();
   Serial.begin(115200);
 
-  // Setup Input Pins:
-  pinMode(triggerPin, INPUT_PULLUP);
-  pinMode(switchPin, INPUT_PULLUP);
-  pinMode(lightPin, INPUT_PULLUP);
+  // Setup Output Pins:
+  for (int i = 0; i < NUM_SENSORS; i++) {
+    pinMode(digital_pins[i], OUTPUT);
+    digitalWrite(i, LOW);
+  }
   
   dht.begin();
 
@@ -109,18 +108,30 @@ void loop()
   // Sensor readings may also be up to 2 seconds 'old' (its a very slow sensor)
   float h = dht.readHumidity();
   fieldData[0] = String(h);
-  // Read temperature as Celsius (the default)
-  float t = dht.readTemperature();
+  // Read temperature as Fahrenheit (isFahrenheit = true)
+  float t = dht.readTemperature(true);
   fieldData[1] = String(t);
+
+  for (int i = 0; i < NUM_SENSORS; i++) {
+    // Enable power to sensor
+    digitalWrite(i, HIGH);
+    // Give time to settle
+    delay(100);
+    
+    int val = analogRead(i);
+    fieldData[SENSOR_OFFSET + i] = String(val);
+    
+    // Disable power to sensor
+    digitalWrite(i, LOW);
+  }
 
   // Check if any reads failed and exit early (to try again).
   if (isnan(h) || isnan(t)) {
     Serial.println("Failed to read from DHT sensor!");
-    return;
+  } else {
+    postData();
   }
-  
-  postData();
-  
+    
   // Wait a few seconds between measurements.
   delay(30000);
 }
