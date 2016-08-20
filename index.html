@@ -116,8 +116,20 @@
 		  });
 		  
 		  $('#spinner').spin(false);
+		  $("#reload").show();
 	  });
+
 	}
+	$(document).ready(function() {
+		$("#reload").hide();
+		$("#reload").click(function() {
+			$("#reload").hide();
+			$("#graph").empty();
+			$("#moisturegraph").empty();
+			$("#progress").empty();
+			draw();
+		});
+	});
 	</script>
   </head>
 
@@ -137,6 +149,9 @@
         </section>
 
         <hr>
+	<section class="clearfix">
+	<a href="#" id="reload" class="button"><span>Reload</span></a>
+	</section>
 
         <section id="main_content">
         	

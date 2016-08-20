@@ -102,6 +102,10 @@ header h2 {
   margin-bottom: 40px;
 }
 
+#reload {
+  margin-bottom: 20px;
+}
+
 a.button {
   display: block;
   float: left;
