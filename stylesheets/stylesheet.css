@@ -64,8 +64,8 @@ a:hover {
 }
 
 header {
-  padding-top: 35px;
-  padding-bottom: 25px;
+#  padding-top: 35px;
+#  padding-bottom: 25px;
 }
 
 header h1 {
@@ -99,11 +99,11 @@ header h2 {
 }
 
 #downloads {
-  margin-bottom: 40px;
+#  margin-bottom: 40px;
 }
 
 #reload {
-  margin-bottom: 20px;
+  margin-right: 0;
 }
 
 a.button {
@@ -166,7 +166,7 @@ a.button span {
   background: transparent url(../images/octocat-icon.png) 12px 50% no-repeat;
 }
 #view-on-github {
-  margin-right: 0;
+#  margin-right: 0;
 }
 
 code, pre {
@@ -359,7 +359,7 @@ footer a:hover {
     padding-bottom: 10px;
   }
   #downloads {
-    margin-bottom: 25px;
+#    margin-bottom: 25px;
   }
   #download-zip, #download-tar-gz {
     display: none;
